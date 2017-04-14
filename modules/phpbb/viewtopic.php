@@ -84,26 +84,33 @@ if (isset($_GET['all'])) {
         $paging = true;
 }
 
+$mysqli = new mysqli("localhost", "root", "", $currentCourseID);
+mysqli_set_charset($mysqli, "utf8");
 $sql = "SELECT f.forum_type, f.forum_name
 	FROM forums f, topics t
-	WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic) AND (t.forum_id = f.forum_id)";
-echo($forum);
-echo($sql);
+	WHERE (f.forum_id = ?) AND (t.topic_id = ?) AND (t.forum_id = f.forum_id)";
 
-if (!$result = db_query($sql, $currentCourseID)) {
+$stmt = $mysqli->prepare($sql);
+$stmt->bind_param("ii",$forum,$topic);
+$stmt->execute();
+$stmt->bind_result($forum_type,$forum_name);
+$stmt->store_result();
+$stmt->fetch();
+$rows = $stmt->num_rows;
+
+if ($rows == 0) {
 	$tool_content .= $langErrorConnectForumDatabase;
 	draw($tool_content, 2);
 	exit();
 }
 
-if (!$myrow = mysql_fetch_array($result)) {
+if ($rows == 0) {
 	$tool_content .= $langErrorTopicSelect;
 	draw($tool_content, 2);
 	exit();
 }
-echo( $myrow);
-echo($myrow["forum_name"]);
-$forum_name = own_stripslashes($myrow["forum_name"]);
+
+#$forum_name = own_stripslashes($myrow["forum_name"]);
 
 $sql = "SELECT topic_title, topic_status
 	FROM topics
