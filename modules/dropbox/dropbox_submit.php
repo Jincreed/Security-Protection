@@ -50,6 +50,13 @@ $nameTools = $dropbox_lang["dropbox"];
  * behaviours with POST requests.
  */
 
+ function sanitize_text($input_text) {
+ 	$sanitized_text = trim($input_text);
+ 	$sanitized_text = strip_tags($sanitized_text);
+ 	$sanitized_text = htmlspecialchars($sanitized_text);
+ 	return $sanitized_text;
+ }
+
 if (isset($_POST["dropbox_unid"])) {
 	$dropbox_unid = $_POST["dropbox_unid"];
 } elseif (isset($_GET["dropbox_unid"]))
@@ -89,6 +96,12 @@ if (isset($_POST["submitWork"]))
 
 	$error = FALSE;
 	$errormsg = '';
+
+
+if(isset( $_POST['description'])){
+		$description = sanitize_text($description);
+		echo($description);
+}
 
 
 if (!isset( $_POST['authors']) || !isset( $_POST['description']))
@@ -199,7 +212,7 @@ if (!isset( $_POST['authors']) || !isset( $_POST['description']))
 			{
 				move_uploaded_file($dropbox_filetmpname, $dropbox_cnf["sysPath"] . '/' . $dropbox_filename)
 				or die($dropbox_lang["uploadError"]);
-				new Dropbox_SentWork($uid, $dropbox_title, $_POST['description'], $_POST['authors'], $dropbox_filename, $dropbox_filesize, $newWorkRecipients);
+				new Dropbox_SentWork($uid, $dropbox_title, $description, $_POST['authors'], $dropbox_filename, $dropbox_filesize, $newWorkRecipients);
 			}
 		}
 		chdir ($cwd);
