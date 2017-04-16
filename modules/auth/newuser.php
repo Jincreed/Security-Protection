@@ -41,6 +41,15 @@
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
 include 'auth.inc.php';
+
+function sanitize_text($input_text) {
+	 $sanitized_text = trim($input_text);
+	 $sanitized_text = strip_tags($sanitized_text);
+	 $sanitized_text = htmlspecialchars($sanitized_text);
+	 return $sanitized_text;
+}
+
+
 $nameTools = $langUserDetails;
 // Main body
 $navigation[] = array("url"=>"registration.php", "name"=> $langNewUser);
@@ -52,7 +61,7 @@ if (isset($close_user_registration) and $close_user_registration == TRUE) {
         draw($tool_content,0);
 	exit;
  }
- 
+
 $lang = langname_to_code($language);
 
 // display form
@@ -129,6 +138,9 @@ if (!isset($submit)) {
 } else {
 
 	// trim white spaces in the end and in the beginning of the word
+	if(isset($_POST['uname']))
+		$_POST['uname'] = sanitize_text($_POST['uname']);
+
 	$uname = preg_replace('/\ +/', ' ', trim(isset($_POST['uname'])?$_POST['uname']:''));
 	// registration
 	$registration_errors = array();
@@ -183,11 +195,18 @@ if (!isset($submit)) {
 				"$langManager $siteName \n$langTel $telephone \n" .
 				"$langEmail: $emailhelpdesk";
 		}
-	
+
 	send_mail('', '', '', $email, $emailsubject, $emailbody, $charset);
 	$registered_at = time();
 	$expires_at = time() + $durationAccount;  //$expires_at = time() + 31536000;
-	
+
+
+	$nom_form = sanitize_text($nom_form);
+	$prenom_form = sanitize_text($prenom_form);
+	$password = sanitize_text($password);
+	$email = sanitize_text($email);
+	$am = sanitize_text($am);
+
 	// manage the store/encrypt process of password into database
 	$authmethods = array("2","3","4","5");
 	$uname = escapeSimple($uname);  // escape the characters: simple and double quote
@@ -197,6 +216,7 @@ if (!isset($submit)) {
 	} else {
 		$password_encrypted = $password;
 	}
+
 	$q1 = "INSERT INTO `$mysqlMainDb`.user
 	(user_id, nom, prenom, username, password, email, statut, department, am, registered_at, expires_at, lang)
 	VALUES ('NULL', '$nom_form', '$prenom_form', '$uname', '$password_encrypted', '$email','5',
@@ -216,7 +236,7 @@ if (!isset($submit)) {
 	$_SESSION['prenom'] = $prenom;
 	$_SESSION['nom'] = $nom;
 	$_SESSION['uname'] = $uname;
-	
+
 	// registration form
 	$tool_content .= "<table width='99%'><tbody><tr>" .
 			"<td class='well-done' height='60'>" .
