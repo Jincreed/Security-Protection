@@ -73,7 +73,7 @@ include("functions.php");
 
 $forum = intval($_GET['forum']);
 $tool_content .= "<div id=\"operations_container\"><ul id=\"opslist\">";
-
+echo($forum);
 if ($is_adminOfCourse || $is_admin) {
 	$tool_content .= "
         <li><a href='../forum_admin/forum_admin.php'>$langAdm</a></li>";
@@ -87,7 +87,7 @@ $tool_content .= "<li><a href='newtopic.php?forum=$forum'>$langNewTopic</a></li>
 $sql = "SELECT f.forum_type, f.forum_name
 	FROM forums f
 	WHERE forum_id = '$forum'";
-
+echo($sql);
 $result = db_query($sql, $currentCourseID);
 
 $myrow = mysql_fetch_array($result);

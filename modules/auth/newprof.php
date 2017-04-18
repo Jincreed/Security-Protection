@@ -30,6 +30,14 @@ require_once 'auth.inc.php';
 $nameTools = $langReqRegProf;
 $navigation[] = array("url"=>"registration.php", "name"=> $langNewUser);
 
+
+function sanitize_text($input_text) {
+	 $sanitized_text = trim($input_text);
+	 $sanitized_text = strip_tags($sanitized_text);
+	 $sanitized_text = htmlspecialchars($sanitized_text);
+	 return $sanitized_text;
+}
+
 // Initialise $tool_content
 $tool_content = "";
 
@@ -139,6 +147,14 @@ $registration_errors = array();
                                       break;
                     }
             }
+						$prenom_form = sanitize_text($prenom_form);
+						$nom_form = sanitize_text($nom_form);
+						$uname = sanitize_text($uname);
+						$email_form = sanitize_text($email_form);
+						$department = sanitize_text($department);
+						$userphone = sanitize_text($userphone);
+						$usercomment = sanitize_text($usercomment);
+						$proflang = sanitize_text($proflang);
 
             db_query('INSERT INTO prof_request SET
                                 profname = ' . autoquote($prenom_form). ',
