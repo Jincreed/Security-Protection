@@ -77,43 +77,30 @@ function confirmation()
 }
 </script>
 ';
-
+ 
 if (isset($_GET['all'])) {
         $paging = false;
 } else {
         $paging = true;
 }
 
-$mysqli = new mysqli("localhost", "root", "", $currentCourseID);
-mysqli_set_charset($mysqli, "utf8");
 $sql = "SELECT f.forum_type, f.forum_name
-	FROM forums f, topics t
-	WHERE (f.forum_id = ?) AND (t.topic_id = ?) AND (t.forum_id = f.forum_id)";
-
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param("ii",$forum,$topic);
-$stmt->execute();
-$stmt->bind_result($forum_type,$forum_name);
-$stmt->store_result();
-$stmt->fetch();
-$rows = $stmt->num_rows;
-
-if ($rows == 0) {
+	FROM forums f, topics t 
+	WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic) AND (t.forum_id = f.forum_id)";
+if (!$result = db_query($sql, $currentCourseID)) {
 	$tool_content .= $langErrorConnectForumDatabase;
 	draw($tool_content, 2);
 	exit();
 }
-
-if ($rows == 0) {
+if (!$myrow = mysql_fetch_array($result)) {
 	$tool_content .= $langErrorTopicSelect;
 	draw($tool_content, 2);
 	exit();
 }
-
-#$forum_name = own_stripslashes($myrow["forum_name"]);
+$forum_name = own_stripslashes($myrow["forum_name"]);
 
 $sql = "SELECT topic_title, topic_status
-	FROM topics
+	FROM topics 
 	WHERE topic_id = '$topic'";
 
 $total = get_total_posts($topic, $currentCourseID, "topic");
@@ -145,7 +132,7 @@ $nameTools = $topic_subject;
 		$tool_content .= "<a href='reply.php?topic=$topic&amp;forum=$forum'>$langAnswer</a>";
 	} else {
 		$tool_content .= "<img src='$reply_locked_image' alt='' />";
-	}
+	}				
 	$tool_content .= "</li></ul></div>";
 
 if ($paging and $total > $posts_per_page ) {
@@ -185,7 +172,7 @@ if ($paging and $total > $posts_per_page ) {
 		$tool_content .= "\n       <a href=\"$_SERVER[PHP_SELF]?topic=$topic&amp;forum=$forum&amp;start=$last_page\">$langPreviousPage</a>&nbsp;|";
 	} else {
 		$start = 0;
-	}
+	}	
 	if (($start + $posts_per_page) < $total) {
 		$next_page = $start + $posts_per_page;
 		$tool_content .= "\n       <a href=\"$_SERVER[PHP_SELF]?topic=$topic&amp;forum=$forum&amp;start=$next_page\">$langNextPage</a>&nbsp;|";
@@ -201,7 +188,7 @@ if ($paging and $total > $posts_per_page ) {
 	<td WIDTH=\"60%\" align=\"left\">
 	<span class='row'><strong class='pagination'>&nbsp;</strong></span></td>
 	<td align=\"right\">";
-	if ($total > $posts_per_page) {
+	if ($total > $posts_per_page) {	
 		$tool_content .= "<span class='pages'>
 		&nbsp;<a href=\"$_SERVER[PHP_SELF]?topic=$topic&amp;forum=$forum&amp;start=0\">$langPages</a>
 		</span>";
@@ -223,14 +210,14 @@ cData;
 
 $topic = intval($_GET['topic']);
 if (isset($_GET['all'])) {
-    $sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt
-		WHERE topic_id = '$topic'
+    $sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt 
+		WHERE topic_id = '$topic' 
 		AND p.post_id = pt.post_id
 		ORDER BY post_id";
 } elseif (isset($_GET['start'])) {
 	$start = intval($_GET['start']);
-	$sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt
-		WHERE topic_id = '$topic'
+	$sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt 
+		WHERE topic_id = '$topic' 
 		AND p.post_id = pt.post_id
 		ORDER BY post_id LIMIT $start, $posts_per_page";
 } else {
@@ -249,7 +236,7 @@ $count = 0;
 do {
 	if(!($count % 2))
 		$row_color = 'topic_row1';
-	else
+	else 
 		$row_color = 'topic_row2';
 	$tool_content .= "<tr>";
 	$tool_content .= "<td class=\"$row_color\"><b>" . $myrow["prenom"] . " " . $myrow["nom"] . "</b></td>";
@@ -317,7 +304,7 @@ cData;
 		$tool_content .= "\n       <a href=\"$_SERVER[PHP_SELF]?topic=$topic&amp;forum=$forum&amp;start=$last_page\">$langPreviousPage</a>&nbsp;|";
 	} else {
 		$start = 0;
-	}
+	}	
 	if (($start + $posts_per_page) < $total) {
 		$next_page = $start + $posts_per_page;
 		$tool_content .= "\n<a href=\"$_SERVER[PHP_SELF]?topic=$topic&amp;forum=$forum&amp;start=$next_page\">$langNextPage</a>&nbsp;|";
@@ -333,7 +320,7 @@ cData;
 	</span></td>
 	<td align=\"right\">
 	<span class='pages'>";
-	if ($total > $posts_per_page) {
+	if ($total > $posts_per_page) {	
 		$tool_content .= "&nbsp;<a href=\"$_SERVER[PHP_SELF]?topic=$topic&amp;forum=$forum&amp;start=0\">$langPages</a>";
         } else {
                 $tool_content .= '&nbsp;';
