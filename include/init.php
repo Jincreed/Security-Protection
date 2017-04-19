@@ -33,14 +33,17 @@
  * It initialises variables, includes security checks and serves language switching
  *
  */
- if(substr($_SERVER['HTTP_REFERER'],0,25) !== "localhost/openeclass-2.3/"
-   and
-	 substr($_SERVER['HTTP_REFERER'],0,32) !== "http://localhost/openeclass-2.3/"){
-	     echo "got ya noob! <br> Does your mommy know you are playing hacker?";
-	     end_page(TRUE, TRUE);
-	     exit();
- }
 
+// if(empty($_SERVER['HTTP_REFERER']))
+//   echo "null referer!";
+//
+//  if(substr($_SERVER['HTTP_REFERER'],0,25) !== "localhost/openeclass-2.3/"
+//    and
+// 	 substr($_SERVER['HTTP_REFERER'],0,32) !== "http://localhost/openeclass-2.3/"){
+// 	     echo "got ya noob! <br> Does your mommy know you are playing hacker?";
+// 	     end_page(TRUE, TRUE);
+// 	     exit();
+//  }
 
 if(function_exists("date_default_timezone_set")) { // only valid if PHP > 5.1
 	date_default_timezone_set("Europe/Athens");
@@ -73,6 +76,7 @@ if (isset($path2add) && $path2add == 0){
 
 // function library
 include $relPathLib . "lib/main.lib.php";
+
 //if session isn't started, start it. Needed by the language switch
 if (!session_id()) { session_start(); }
 
@@ -355,3 +359,5 @@ if(isset($currentCourse) && file_exists($module_ini_dir = getcwd() . "/module.in
 		$errorMessagePath = "../../";
 	}
 }
+
+include_once "${webDir}csrf-magic/csrf-magic.php";
