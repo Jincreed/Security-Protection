@@ -241,6 +241,9 @@ function add_assignment($title, $comments, $desc, $deadline, $group_submissions)
 //  $comments = sanitize_text($comments);
  // $title = sanitize_text($title);
 	$secret = uniqid("");
+	$title = mysql_real_escape_string($title);
+	$desc = mysql_real_escape_string($desc);
+	$comments = mysql_real_escape_string($comments);
 	db_query("INSERT INTO assignments
 		(title, description, comments, deadline, submission_date, secret_directory,
 			group_submissions) VALUES
@@ -322,12 +325,18 @@ function submit_work($id) {
 		$group_id = user_group($uid, FALSE);
 		if ($group_sub == 'yes' and !was_submitted(-1, $group_id, $id)) {
 			delete_submissions_by_uid(-1, $group_id, $id);
+
+			$filename = mysql_real_escape_string($filename);
+			$stud_comments = mysql_real_escape_string($stud_comments);
+
 			db_query("INSERT INTO assignment_submit
 				(uid, assignment_id, submission_date, submission_ip, file_path,
 				file_name, comments, group_id) VALUES ('$uid','$id', NOW(),
 				'$REMOTE_ADDR', '$filename','".$_FILES['userfile']['name'].
 				"', '$stud_comments', '$group_id')", $currentCourseID);
 		} else {
+			$filename = mysql_real_escape_string($filename);
+			$stud_comments = mysql_real_escape_string($stud_comments);
 			db_query("INSERT INTO assignment_submit
 				(uid, assignment_id, submission_date, submission_ip, file_path,
 				file_name, comments) VALUES ('$uid','$id', NOW(), '$REMOTE_ADDR',
@@ -533,10 +542,16 @@ function edit_assignment($id)
 
 	$nav[] = array("url"=>"work.php", "name"=> $langWorks);
 	$nav[] = array("url"=>"work.php?id=$id", "name"=> $_POST['title']);
+
 	$id = mysql_real_escape_string($id);
-	if (db_query("UPDATE assignments SET title=".autoquote($_POST['title']).",
-		description=".autoquote($_POST['desc']).", group_submissions=".autoquote($_POST['group_submissions']).",
-		comments=".autoquote($_POST['comments']).", deadline=".autoquote($_POST['WorkEnd'])." WHERE id='$id'")) {
+	$title = mysql_real_escape_string($_POST['title']);
+	$description = mysql_real_escape_string($_POST['desc']);
+	$comments = mysql_real_escape_string($_POST['comments']);
+
+
+	if (db_query("UPDATE assignments SET title=".autoquote($title).",
+		description=".autoquote($description).", group_submissions=".autoquote($_POST['group_submissions']).",
+		comments=".autoquote($comments).", deadline=".autoquote($_POST['WorkEnd'])." WHERE id='$id'")) {
 
         $title = autounquote($_POST['title']);
 	$tool_content .="<p class='success_small'>$langEditSuccess<br /><a href='work.php?id=$id'>$langBackAssignment '$title'</a></p><br />";
@@ -1189,6 +1204,9 @@ function submit_grade_comments($id, $sid, $grade, $comment)
 		$tool_content .= $langWorkWrongInput;
 		$stupid_user = 1;
 	} else {
+
+		$grade = mysql_real_escape_string($grade);
+		$comment = mysql_real_escape_string($comment);
 		db_query("UPDATE assignment_submit SET grade='$grade', grade_comments='$comment',
 		grade_submission_date=NOW(), grade_submission_ip='$REMOTE_ADDR'
 		WHERE id = '$sid'");
