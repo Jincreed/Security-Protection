@@ -87,17 +87,27 @@ if (isset($_POST['submit'])) {
                 }
 
                 list($facid, $facname) = explode('--', $_POST['facu']);
+
+                $title = mysql_real_escape_string($_POST['title']);
+                $facname = mysql_real_escape_string($facname);
+                $description = mysql_real_escape_string($_POST['description']);
+                $course_addon = mysql_real_escape_string($_POST['course_addon']);
+                $course_keywords = mysql_real_escape_string($_POST['course_keywords']);
+                $titulary = mysql_real_escape_string($_POST['titulary']);
+                $password = mysql_real_escape_string($_POST['password']);
+
+
                 db_query("UPDATE `$mysqlMainDb`.cours
-                          SET intitule = " . autoquote($_POST['title']) .",
+                          SET intitule = " . autoquote($title) .",
                               faculte = " . autoquote($facname) . ",
-                              description = " . autoquote($_POST['description']) . ",
-                              course_addon = " . autoquote($_POST['course_addon']) . ",
-                              course_keywords = ".autoquote($_POST['course_keywords']) . ",
+                              description = " . autoquote($description) . ",
+                              course_addon = " . autoquote($course_addon) . ",
+                              course_keywords = ".autoquote($course_keywords) . ",
                               visible = " . intval($_POST['formvisible']) . ",
-                              titulaires = " . autoquote($_POST['titulary']) . ",
+                              titulaires = " . autoquote($titulary) . ",
                               languageCourse = '$newlang',
                               type = " . autoquote($_POST['type']) . ",
-                              password = " . autoquote($_POST['password']) . ",
+                              password = " . autoquote(password) . ",
                               faculteid = " . intval($facid) . "
                           WHERE cours_id = $cours_id");
                 db_query("UPDATE `$mysqlMainDb`.cours_faculte
