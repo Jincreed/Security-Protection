@@ -94,20 +94,27 @@ if (isset($_GET['delete'])) {
         }
 } elseif (isset($_POST['submitAnnouncement'])) {
 	// submit announcement command
+        $title = mysql_real_escape_string($title);
+        $newContent = mysql_real_escape_string($newContent);
+        $comment = mysql_real_escape_string($newContent);
+        $title_en = mysql_real_escape_string($title_en);
+        $newContent_en = mysql_real_escape_string($newContent_en);
+        $comment_en = mysql_real_escape_string($comment_en);
+
         if (isset($_POST['id'])) {
                 // modify announcement
                 $id = intval($_POST['id']);
                 db_query("UPDATE admin_announcements
-                        SET gr_title = $title, gr_body = $newContent, gr_comment = $comment,
-                        en_title = $title_en, en_body = $newContent_en, en_comment = $comment_en,
+                        SET gr_title = '$title', gr_body = '$newContent', gr_comment = '$comment',
+                        en_title = '$title_en', en_body = '$newContent_en', en_comment = '$comment_en',
                         visible = '$visible', date = NOW()
                         WHERE id = $id", $mysqlMainDb);
                 $message = $langAdminAnnModify;
         } else {
                 // add new announcement
                 db_query("INSERT INTO admin_announcements
-                        SET gr_title = $title, gr_body = $newContent, gr_comment = $comment,
-                        en_title = $title_en, en_body = $newContent_en, en_comment = $comment_en,
+                        ET gr_title = '$title', gr_body = '$newContent', gr_comment = '$comment',
+                        en_title = '$title_en', en_body = '$newContent_en', en_comment = '$comment_en',
                         visible = '$visible', date = NOW()");
                 $message = $langAdminAnnAdd;
         }

@@ -65,6 +65,7 @@ if((!empty($step)) && ($step=='1')) {
 $test_username = isset($_POST['test_username'])?$_POST['test_username']:'';
 $test_password = isset($_POST['test_password'])?$_POST['test_password']:'';
 
+
 if((!empty($auth_submit)) && ($auth_submit==1)) {
 	$submit = isset($_POST['submit'])?$_POST['submit']:'';
 	// if form is submitted
@@ -140,6 +141,9 @@ if((!empty($auth_submit)) && ($auth_submit==1)) {
 				default:
 					break;
 			}
+
+			$auth_settings = mysql_real_escape_string($auth_settings);
+			$auth_instructions = mysql_real_escape_string($auth_instructions);
 
 			$qry = "UPDATE auth SET auth_settings='".$auth_settings."',
 				auth_instructions='".$auth_instructions."',auth_default=1 

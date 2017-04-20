@@ -149,6 +149,7 @@ if ($is_adminOfCourse) {
 		$navigation[] = array("url"=>"work.php", "name"=> $langWorks);
 		submit_grades($grades_id, $grades);
 	} elseif (isset($id)) {
+		$id = mysql_real_escape_string($id);
 		if (isset($choice)) {
 			if ($choice == 'disable') {
 				db_query("UPDATE assignments SET active = '0' WHERE id = '$id'");
@@ -237,9 +238,12 @@ function add_assignment($title, $comments, $desc, $deadline, $group_submissions)
 {
 	global $tool_content, $workPath;
 
-  $comments = sanitize_text($comments);
-  $title = sanitize_text($title);
+//  $comments = sanitize_text($comments);
+ // $title = sanitize_text($title);
 	$secret = uniqid("");
+	$title = mysql_real_escape_string($title);
+	$desc = mysql_real_escape_string($desc);
+	$comments = mysql_real_escape_string($comments);
 	db_query("INSERT INTO assignments
 		(title, description, comments, deadline, submission_date, secret_directory,
 			group_submissions) VALUES
@@ -275,6 +279,7 @@ function submit_work($id) {
 		} else { //user NOT guest
 			if(isset($status) && isset($status[$_SESSION["dbname"]])) {
 				//user is registered to this lesson
+				$id = mysql_real_escape_string($id);
 				$res = db_query("SELECT (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
 					FROM assignments WHERE id = '$id'");
 				$row = mysql_fetch_array($res);
@@ -290,7 +295,7 @@ function submit_work($id) {
 
 		}
 	} //checks for submission validity end here
-
+	$id = mysql_real_escape_string($id);
   	$res = db_query("SELECT title FROM assignments WHERE id = '$id'");
 	$row = mysql_fetch_array($res);
 
@@ -320,12 +325,18 @@ function submit_work($id) {
 		$group_id = user_group($uid, FALSE);
 		if ($group_sub == 'yes' and !was_submitted(-1, $group_id, $id)) {
 			delete_submissions_by_uid(-1, $group_id, $id);
+
+			$filename = mysql_real_escape_string($filename);
+			$stud_comments = mysql_real_escape_string($stud_comments);
+
 			db_query("INSERT INTO assignment_submit
 				(uid, assignment_id, submission_date, submission_ip, file_path,
 				file_name, comments, group_id) VALUES ('$uid','$id', NOW(),
 				'$REMOTE_ADDR', '$filename','".$_FILES['userfile']['name'].
 				"', '$stud_comments', '$group_id')", $currentCourseID);
 		} else {
+			$filename = mysql_real_escape_string($filename);
+			$stud_comments = mysql_real_escape_string($stud_comments);
 			db_query("INSERT INTO assignment_submit
 				(uid, assignment_id, submission_date, submission_ip, file_path,
 				file_name, comments) VALUES ('$uid','$id', NOW(), '$REMOTE_ADDR',
@@ -443,7 +454,7 @@ function show_edit_assignment($id)
 	global $tool_content, $m, $langEdit, $langWorks, $langBack;
 	global $urlAppend;
 	global $end_cal_Work_db;
-
+	$id = mysql_real_escape_string($id);
 	$res = db_query("SELECT * FROM assignments WHERE id = '$id'");
 	$row = mysql_fetch_array($res);
 
@@ -532,9 +543,15 @@ function edit_assignment($id)
 	$nav[] = array("url"=>"work.php", "name"=> $langWorks);
 	$nav[] = array("url"=>"work.php?id=$id", "name"=> $_POST['title']);
 
-	if (db_query("UPDATE assignments SET title=".autoquote($_POST['title']).",
-		description=".autoquote($_POST['desc']).", group_submissions=".autoquote($_POST['group_submissions']).",
-		comments=".autoquote($_POST['comments']).", deadline=".autoquote($_POST['WorkEnd'])." WHERE id='$id'")) {
+	$id = mysql_real_escape_string($id);
+	$title = mysql_real_escape_string($_POST['title']);
+	$description = mysql_real_escape_string($_POST['desc']);
+	$comments = mysql_real_escape_string($_POST['comments']);
+
+
+	if (db_query("UPDATE assignments SET title=".autoquote($title).",
+		description=".autoquote($description).", group_submissions=".autoquote($_POST['group_submissions']).",
+		comments=".autoquote($comments).", deadline=".autoquote($_POST['WorkEnd'])." WHERE id='$id'")) {
 
         $title = autounquote($_POST['title']);
 	$tool_content .="<p class='success_small'>$langEditSuccess<br /><a href='work.php?id=$id'>$langBackAssignment '$title'</a></p><br />";
@@ -549,6 +566,7 @@ function delete_assignment($id) {
 
 	global $tool_content, $workPath, $currentCourseID, $webDir, $langBack, $langDeleted;
 
+	$id = mysql_real_escape_string($id);
 	$secret = work_secret($id);
 	db_query("DELETE FROM assignments WHERE id='$id'");
 	db_query("DELETE FROM assignment_submit WHERE assignment_id='$id'");
@@ -568,6 +586,7 @@ function show_student_assignment($id)
 	global $tool_content, $m, $uid, $langSubmitted, $langSubmittedAndGraded, $langNotice3,
 	$langWorks, $langUserOnly, $langBack, $langWorkGrade, $langGradeComments;
 
+	$id = mysql_real_escape_string($id);
 	$res = db_query("SELECT *, (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
 		FROM assignments WHERE id = '$id'");
 	$row = mysql_fetch_array($res);
@@ -772,6 +791,7 @@ function show_assignment($id, $message = FALSE)
 	global $langEndDeadline, $langWEndDeadline, $langNEndDeadline, $langDays, $langDaysLeft, $langGradeOk;
 	global $currentCourseID, $webDir, $urlServer, $nameTools, $langGraphResults, $m;
 
+	$id = mysql_real_escape_string($id);
 	$res = db_query("SELECT *, (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days FROM assignments WHERE id = '$id'");
 	$row = mysql_fetch_array($res);
 
@@ -1184,6 +1204,9 @@ function submit_grade_comments($id, $sid, $grade, $comment)
 		$tool_content .= $langWorkWrongInput;
 		$stupid_user = 1;
 	} else {
+
+		$grade = mysql_real_escape_string($grade);
+		$comment = mysql_real_escape_string($comment);
 		db_query("UPDATE assignment_submit SET grade='$grade', grade_comments='$comment',
 		grade_submission_date=NOW(), grade_submission_ip='$REMOTE_ADDR'
 		WHERE id = '$sid'");
@@ -1287,6 +1310,7 @@ function create_zip_index($path, $id, $online = FALSE)
 				<th>'.$m['grade'].'</th>
 			</tr></thead>');
 
+	$id = mysql_real_escape_string($id);
 	$result = db_query("SELECT * FROM assignment_submit
 		WHERE assignment_id='$id' ORDER BY id");
 

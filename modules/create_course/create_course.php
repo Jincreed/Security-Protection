@@ -380,6 +380,11 @@ if (isset($_POST['create_course'])) {
         // ------------- update main Db------------
         mysql_select_db("$mysqlMainDb");
 
+        $intitule = mysql_real_escape_string($intitule);
+      	$description = mysql_real_escape_string($description);
+      	$course_addon = mysql_real_escape_string($course_addon);
+      	$course_keywords = mysql_real_escape_string($course_keywords);
+      	$code = mysql_real_escape_string($code);
         db_query("INSERT INTO cours SET
                         code = '$code',
                         languageCourse =" . quote($language) . ",

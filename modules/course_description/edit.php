@@ -90,6 +90,7 @@ if ($is_adminOfCourse) {
                         $edTitleBloc = $titreBloc[$edIdBloc];
                 }
                 db_query("INSERT IGNORE INTO course_description SET id = $new_id");
+                $edContentBloc = mysql_real_escape_string($edContentBloc);
                 db_query("UPDATE course_description
                                 SET title = " . autoquote(trim($edTitleBloc)) . ",
                                     content = " . autoquote(trim($edContentBloc)) . ",

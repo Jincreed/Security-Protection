@@ -163,6 +163,9 @@ elseif ($a == 1)  {
 			$tool_content .= "<center><p><a href=\"$_SERVER[PHP_SELF]?a=1\">".$langReturnToAddFaculte."</a></p></center>";
 		} else {
 		// OK Create the new faculty
+			$codefaculte = mysql_real_escape_string($codefaculte);
+			$faculte = mysql_real_escape_string($faculte);
+
 			mysql_query("INSERT into faculte(code,name,generator,number) VALUES(" . autoquote($codefaculte) . ',' . autoquote($faculte) . ",'100','1000')")
 				or die ($langNoSuccess);
 			$tool_content .= "<p>".$langAddSuccess."</p><br />";
@@ -225,6 +228,7 @@ elseif ($a == 3)  {
 			$tool_content .= "<p align='right'><a href='$_SERVER[PHP_SELF]?a=3&amp;c=$c'>$langReturnToEditFaculte</a></p>";
 		} else {
 		// OK Update the faculte
+			$faculte = mysql_real_escape_string($faculte);
 			mysql_query("UPDATE faculte SET name = " .
                                     autoquote($faculte) . " WHERE id=$c")
 				or die ($langNoSuccess);

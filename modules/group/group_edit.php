@@ -141,6 +141,10 @@ if (isset($modify))
         if (!$is_adminOfCourse) {
                 $tutor = $tutor_id;
         }
+
+  $name = mysql_real_escape_string($name);
+  $description = mysql_real_escape_string($description);
+  
 	$updateStudentGroup = db_query("UPDATE student_group
 		SET name='$name', description='$description', maxStudent='$maxStudent', tutor='$tutor'
 		WHERE id='$userGroupId'", $currentCourseID);

@@ -156,6 +156,14 @@ $registration_errors = array();
 						$usercomment = sanitize_text($usercomment);
 						$proflang = sanitize_text($proflang);
 
+            $prenom_form = mysql_real_escape_string($prenom_form);
+            $nom_form = mysql_real_escape_string($nom_form);
+            $uname = mysql_real_escape_string($uname);
+            $email_form = mysql_real_escape_string($email_form);
+            $department = mysql_real_escape_string($department);
+            $userphone = mysql_real_escape_string($userphone);
+            $usercomment = mysql_real_escape_string($usercomment);
+            
             db_query('INSERT INTO prof_request SET
                                 profname = ' . autoquote($prenom_form). ',
                                 profsurname = ' . autoquote($nom_form). ',

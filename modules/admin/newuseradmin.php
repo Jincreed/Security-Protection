@@ -58,6 +58,7 @@ if($submit) {
 	}
 
 	// check if user name exists
+	$uname = mysql_real_escape_string($uname);
 	$username_check = mysql_query("SELECT username FROM `$mysqlMainDb`.user 
 			WHERE username=".autoquote($uname));
 	$user_exist = (mysql_num_rows($username_check) > 0);
@@ -76,6 +77,13 @@ if($submit) {
                 $registered_at = time();
 		$expires_at = time() + $durationAccount;
 		$password_encrypted = md5($password);
+
+		$nom_form = mysql_real_escape_string($nom_form);
+		$prenom_form = mysql_real_escape_string($prenom_form);
+		$uname = mysql_real_escape_string($uname);
+		$email_form = mysql_real_escape_string($email_form);
+		$comment = mysql_real_escape_string($comment);
+
 		$inscr_user = db_query("INSERT INTO `$mysqlMainDb`.user
 				(nom, prenom, username, password, email, statut, department, am, registered_at, expires_at,lang)
 				VALUES (" .

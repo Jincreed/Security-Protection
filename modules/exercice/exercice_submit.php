@@ -56,6 +56,7 @@ $TBL_REPONSES='reponses';
  
 if (isset($exerciseId)) {
 	// security check 
+	$exerciseId = mysql_real_escape_string($exerciseId);
 	$active = mysql_fetch_array(db_query("SELECT active FROM `$TBL_EXERCICES` 
 		WHERE id='$exerciseId'", $currentCourseID));
 	if (($active['active'] == 0) and (!$is_allowedToEdit)) {
