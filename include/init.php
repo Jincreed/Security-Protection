@@ -360,7 +360,7 @@ if(isset($currentCourse) && file_exists($module_ini_dir = getcwd() . "/module.in
 	}
 }
 
-include_once "${webDir}csrf-magic/csrf-magic.php";
+//include_once "${webDir}csrf-magic/csrf-magic.php";
 
 $httpReferer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 if($httpReferer!== null and substr($httpReferer,0,24) !== "localhost/openeclass-2.3" and
