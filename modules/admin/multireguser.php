@@ -169,6 +169,7 @@ function create_user($statut, $uname, $nom, $prenom, $email, $depid, $am, $phone
                 // $langAsUser;
         }
 
+        $uname = mysql_real_escape_string($uname);
         $req = db_query('SELECT * FROM user WHERE username = ' . autoquote($uname));
         if ($req and mysql_num_rows($req) > 0) {
                 $GLOBALS['error'] = "$GLOBALS[l_invalidname] ($uname)";
@@ -179,6 +180,13 @@ function create_user($statut, $uname, $nom, $prenom, $email, $depid, $am, $phone
         $registered_at = time();
         $expires_at = time() + $durationAccount;
         $password_encrypted = md5($password);
+
+        $nom = mysql_real_escape_string($nom);
+        $prenom = mysql_real_escape_string($prenom);
+        $uname = mysql_real_escape_string($uname);
+        $email = mysql_real_escape_string($email);
+        $am = mysql_real_escape_string($am);
+        $phone = mysql_real_escape_string($phone);
 
         $req = db_query("INSERT INTO user
                                 (nom, prenom, username, password, email, statut, department, registered_at, expires_at, lang, am, phone)
@@ -235,7 +243,8 @@ function create_username($statut, $depid, $nom, $prenom, $prefix)
 
 
 function register($uid, $course_code)
-{
+{       
+        $code = mysql_real_escape_string($code);
         $code = autoquote($course_code);
         $req = db_query("SELECT code, cours_id FROM cours WHERE code=$code OR fake_code=$code");
         if ($req and mysql_num_rows($req) > 0) {
