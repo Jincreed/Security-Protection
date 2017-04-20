@@ -32,7 +32,6 @@
  * is not logged in.
  *
  */
-
 /***************************************************************
 *               HOME PAGE OF ECLASS		               *
 ****************************************************************
@@ -40,8 +39,10 @@
 define ("INDEX_START", 1);
 $guest_allowed = true;
 $path2add = 0;
+
 include "include/baseTheme.php";
 include "modules/auth/auth.inc.php";
+
 //$homePage is used by baseTheme.php to parse correctly the breadcrumb
 $homePage = true;
 $tool_content = "";

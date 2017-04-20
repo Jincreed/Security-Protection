@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*========================================================================
 *   Open eClass 2.3
@@ -30,7 +30,7 @@
 	@version $Id: work_functions.php,v 1.10 2008-09-30 13:52:14 doku Exp $
 	@author: Dionysios G. Synodinos <synodinos@gmail.com>
 	@author: Evelthon Prodromou	<eprodromou@upnet.gr>
-==============================================================================        
+==============================================================================
         @Description: Main script for the work tool
 
  	This is a tool plugin that allows course administrators - or others with the
@@ -39,7 +39,7 @@
  	The user can : - navigate through files and directories.
                        - upload a file
                        - delete, copy a file or a directory
-                       - edit properties & content (name, comments, 
+                       - edit properties & content (name, comments,
 			 html content)
 
  	@Comments: The script is organised in four sections.
@@ -51,11 +51,17 @@
    	2) Define the directory to display
   	3) Read files and directories from the directory defined in part 2
   	4) Display all of that on an HTML page
- 
+
   	@TODO: eliminate code duplication between document/document.php, scormdocument.php
 ==============================================================================
 */
 
+function sanitize_text($input_text) {
+ $sanitized_text = trim($input_text);
+ $sanitized_text = strip_tags($sanitized_text);
+ $sanitized_text = htmlspecialchars($sanitized_text);
+ return $sanitized_text;
+}
 
 // Print a two-cell table row with that title, if the content is non-empty
 function table_row($title, $content)
@@ -76,7 +82,7 @@ function table_row($title, $content)
 function work_secret($id)
 {
 	global $currentCourseID, $workPath, $tool_content, $coursePath;
-	
+
 	$res = db_query("SELECT secret_directory FROM assignments WHERE id = '$id'", $currentCourseID);
 	if ($res) {
 		$secret = mysql_fetch_row($res);
@@ -168,7 +174,7 @@ function greek_to_latin($string)
 
 // Returns an array of a group's members' uids
 function group_members($gid)
-{	
+{
 	global $currentCourseID, $tool_content;
 
 	$members = array();
@@ -295,13 +301,13 @@ function show_submission_details($id)
 		$graded = FALSE;
 		$notice = $GLOBALS['langSubmitted'];
 	}
-	
+
 	if ($sub['uid'] != $uid) {
 		$sub_notice = "$m[submitted_by_other_member] ".
 			"<a href='../group/group_space.php?userGroupId=$sub[group_id]'>".
 			"$m[your_group]</a> (".uid_to_name($sub['uid']).")";
 	} else $sub_notice = "";
-	
+
 	$tool_content .= "
     <br />
     <table width=\"99%\" class=\"FormData\">
@@ -316,10 +322,10 @@ function show_submission_details($id)
       <td>$notice</td>
     </tr>";
 	table_row($m['grade'], $sub['grade']);
-	table_row($m['gradecomments'], $sub['grade_comments']);
+	table_row($m['gradecomments'], sanitize_text($sub['grade_comments']));
 	table_row($m['sub_date'], $sub['submission_date']);
 	table_row($m['filename'], $sub['file_name']);
-	table_row($m['comments'], $sub['comments']);
+	table_row($m['comments'], sanitize_text($sub['comments']));
 	$tool_content .= "
     </tbody>
     </table>

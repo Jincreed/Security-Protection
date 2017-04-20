@@ -29,6 +29,8 @@ $require_login = true;
 $helpTopic = 'Profile';
 include '../../include/baseTheme.php';
 include "../auth/auth.inc.php";
+
+
 $require_valid_uid = TRUE;
 $tool_content = "";
 
@@ -104,7 +106,7 @@ if (isset($submit) && isset($ldap_submit) && ($ldap_submit == "ON")) {
 
 	mysql_query("UPDATE user SET perso = '$persoStatus',
 		lang = '$langcode' WHERE user_id='".$_SESSION["uid"]."' ");
-	
+
 	if (isset($_SESSION['user_perso_active']) and $persoStatus == "no") {
 		unset($_SESSION['user_perso_active']);
 	}
@@ -229,7 +231,7 @@ if ((!isset($changePass)) || isset($_POST['submit'])) {
 	} else {
 		$tool_content .= "<td><input class='FormData_InputText' type=\"text\" size=\"40\" name=\"prenom_form\" value=\"$prenom_form\"></td>";
 	}
-	
+
 	$tool_content .= "</tr>
     <tr>
        <th class='left'>$langSurname</th>";

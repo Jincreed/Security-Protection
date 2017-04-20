@@ -125,8 +125,10 @@ if (!isset($a)) {
 		$tool_content .= "\n    <td align='center'>".htmlspecialchars($logs[0])."</td>";
 		// Give administrator a link to delete or edit a faculty
 		$tool_content .= "\n    <td width='15%' align='center' nowrap>
+
 		<a href='$_SERVER[PHP_SELF]?a=2&c=".$logs['id']."'>
 		<img src='../../images/delete.gif' border='0' title='$langDelete'></img></a>&nbsp;&nbsp;
+
 		<a href='$_SERVER[PHP_SELF]?a=3&c=".$logs['id']."'>
 		<img src='../../template/classic/img/edit.gif' border='0' title='$langEdit'></img></a></td>
 		</tr>\n";

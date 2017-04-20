@@ -3,7 +3,6 @@
  * OpeneClass 2.2 configuration file
  * Automatically created by install on 2017-04-12 00:54
  * ======================================================== */
-
 $urlServer = "http://localhost/openeclass-2.3/";
 $urlAppend = "/openeclass-2.3";
 $webDir    = "/opt/lampp/htdocs/openeclass-2.3/" ;
@@ -36,6 +35,5 @@ $persoIsActive = TRUE;
 $durationAccount = "126144000";
 
 define("UTF8", true);
-
 
 $encryptedPasswd = true;

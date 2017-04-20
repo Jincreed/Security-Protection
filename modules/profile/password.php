@@ -32,6 +32,7 @@
  * @abstract Password change component
  *
  */
+ include_once '../../csrf-magic/csrf-magic.php';
 $require_login = true;
 $helpTopic = 'Profile';
 $require_valid_uid = TRUE;
