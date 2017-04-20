@@ -94,12 +94,13 @@ cData;
 			WHERE pid=" . intval($pid) . " ORDER BY pqid", $currentCourse);
 		while ($theQuestion = mysql_fetch_array($questions)) {
 			$pqid = $theQuestion["pqid"];
+			$pqid = mysql_real_escape_string($pqid);
 			$qtype = $theQuestion["qtype"];
 			$tool_content .= "<p><b>".$theQuestion["question_text"]."</b><br>\n" .
 				"<input type='hidden' name='question[$pqid]' value='$qtype'>";
 			if ($qtype == 'multiple') {
 				$answers = db_query("SELECT * FROM poll_question_answer 
-					WHERE pqid=$pqid ORDER BY pqaid", $currentCourse);
+					WHERE pqid='$pqid' ORDER BY pqaid", $currentCourse);
 				while ($theAnswer = mysql_fetch_array($answers)) {
 					$tool_content .= "\n<label><input type='radio' name='answer[$pqid]' value='$theAnswer[pqaid]'>$theAnswer[answer_text]</label><br>\n";
 				}
