@@ -65,6 +65,8 @@ $close = isset($_GET['close'])?$_GET['close']:(isset($_POST['close'])?$_POST['cl
 $id = isset($_GET['id'])?$_GET['id']:(isset($_POST['id'])?$_POST['id']:'');
 $show = isset($_GET['show'])?$_GET['show']:(isset($_POST['show'])?$_POST['show']:'');
 
+$id = mysql_real_escape_string($id);
+
 // Deal with navigation
 switch ($show) {
 	case "closed":

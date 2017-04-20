@@ -327,6 +327,7 @@ function editPoll($pid, $questions, $question_types) {
 	global $pid;
 
 	$PollName = $_POST['PollName'];
+	$PollName = mysql_real_escape_string($PollName);
 	$StartDate = $_POST['PollStart'];
 	$EndDate = $_POST['PollEnd'];
 

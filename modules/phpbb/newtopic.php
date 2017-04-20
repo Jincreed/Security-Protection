@@ -79,6 +79,7 @@ include("functions.php"); // application logic for phpBB
  * Actual code starts here
  *****************************************************************************/
 
+$forum = mysql_real_escape_string($forum);
 $sql = "SELECT forum_name, forum_access, forum_type FROM forums
 	WHERE (forum_id = '$forum')";
 if (!$result = db_query($sql, $currentCourseID)) {
@@ -144,6 +145,9 @@ if (isset($submit) && $submit) {
 	if (isset($sig) && $sig) {
 		$message .= "\n[addsig]";
 	}
+	$nom = mysql_real_escape_string($nom);
+	$prenom = mysql_real_escape_string($prenom);
+	
 	$sql = "INSERT INTO topics (topic_title, topic_poster, forum_id, topic_time, topic_notify, nom, prenom)
 			VALUES (" . autoquote($subject) . ", '$uid', '$forum', '$time', 1, '$nom', '$prenom')";
 	$result = db_query($sql, $currentCourseID);
@@ -158,6 +162,7 @@ if (isset($submit) && $submit) {
 	} else {
 		$post_id = mysql_insert_id();
 		if ($post_id) {
+			$message = mysql_real_escape_string($message);
 			$sql = "INSERT INTO posts_text (post_id, post_text)
 					VALUES ($post_id, " . autoquote($message) . ")";
 			$result = db_query($sql, $currentCourseID);
@@ -185,7 +190,7 @@ if (isset($submit) && $submit) {
 	$category_id = forum_category($forum);
 	$cat_name = category_name($category_id);
 	$sql = db_query("SELECT DISTINCT user_id FROM forum_notify 
-			WHERE (forum_id = $forum OR cat_id = $category_id) 
+			WHERE (forum_id = '$forum' OR cat_id = $category_id) 
 			AND notify_sent = 1 AND course_id = $cours_id", $mysqlMainDb);
 	$c = course_code_to_title($currentCourseID);
 	$body_topic_notify = "$langCourse: '$c'\n\n$langBodyForumNotify $langInForums '$forum_name' $langInCat '$cat_name' \n\n$gunet";

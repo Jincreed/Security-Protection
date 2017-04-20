@@ -118,6 +118,7 @@ $baseWorkDir = $baseServDir.$courseDir;
 // download
 // -------------------------
 if (isset($action2) and $action2 == "download")  {
+	$id = mysql_real_escape_string($id);
 	$real_file = $webDir."/courses/".$currentCourseID."/group/".$secretDirectory."/".$id;
 	if (strpos($real_file, '/../') === FALSE) {
 		$result = db_query ("SELECT filename FROM group_documents WHERE path =" . quote($id), $currentCourseID);
@@ -243,7 +244,9 @@ CREATE DIRECTORY
 *****************************************/
 if (isset($newDirPath) && isset($newDirName)) {
         $newDirName = sanitize_text($newDirName);
+        $newDirName = mysql_real_escape_string($newDirName);
         $newDirPath = sanitize_text($newDirPath);
+        $newDirPath = mysql_real_escape_string($newDirPath);
 
         $r = db_query('SELECT * FROM group_documents WHERE filename = ' . quote($newDirName));
         $exists = false;

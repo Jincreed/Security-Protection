@@ -73,7 +73,7 @@ include("functions.php");
 
 $forum = intval($_GET['forum']);
 $tool_content .= "<div id=\"operations_container\"><ul id=\"opslist\">";
-echo($forum);
+
 if ($is_adminOfCourse || $is_admin) {
 	$tool_content .= "
         <li><a href='../forum_admin/forum_admin.php'>$langAdm</a></li>";
@@ -142,6 +142,7 @@ if ($total_topics > $topics_per_page) { // navigation
 }
 
 if(isset($topicnotify)) { // modify topic notification
+	$topicnotify = mysql_real_escape_string($topicnotify);
 	$rows = mysql_num_rows(db_query("SELECT * FROM forum_notify
 		WHERE user_id = $uid AND topic_id = $topic_id AND course_id = $cours_id", $mysqlMainDb));
 	if ($rows > 0) {

@@ -51,6 +51,7 @@ $nameTools = $langGroupSpace;
 $navigation[] = array ("url"=>"group.php", "name"=> $langGroups);
 $tool_content = "";
 
+$userGroupId = mysql_real_escape_string($userGroupId);
 $countRegistered = mysql_num_rows(db_query("SELECT id FROM user_group 
 	WHERE team='$userGroupId'", $currentCourse));
 $total = mysql_fetch_array(db_query("SELECT maxStudent FROM student_group 

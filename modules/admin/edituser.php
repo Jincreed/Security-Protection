@@ -1,4 +1,4 @@
-<? session_start();
+$<? session_start();
 /*========================================================================
 *   Open eClass 2.3
 *   E-learning and Course Management System
@@ -336,6 +336,14 @@ if (mysql_num_rows($username_check) > 1) {
 			$tool_content .= "<center><br><b>$langExpireBeforeRegister<br><br><a href=\"edituser.php?u=".$u."\">$langAgain</a></b><br />";
 		} else {
 			if ($u=='1') $department = 'NULL';
+
+			$lname = mysql_real_escape_string($lname);
+			$fname = mysql_real_escape_string($fname);
+			$username = mysql_real_escape_string($username);
+			$email = mysql_real_escape_string($email);
+			$phone = mysql_real_escape_string($phone);
+			$am = mysql_real_escape_string($am);
+
 			$sql = "UPDATE user SET nom = ".autoquote($lname).", prenom = ".autoquote($fname).",
 				username = ".autoquote($username).", email = ".autoquote($email).", 
 				statut = ".intval($newstatut).", phone=".autoquote($phone).",

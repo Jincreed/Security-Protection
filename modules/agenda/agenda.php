@@ -126,8 +126,8 @@ if ($is_adminOfCourse) {
 			$perso_matrix['lasting'] = $perso_query_result[5];
 			// Add all data to the main table.
 			$p_sql = "INSERT INTO agenda (lesson_event_id, titre, contenu, day, hour, lasting, lesson_code)
-				VALUES('".$perso_query_result[0]."','".$perso_query_result[1]."',
-				'".$perso_query_result[2]."','".$perso_query_result[3]."',
+				VALUES('".$perso_query_result[0]."','".mysql_real_escape_string($perso_query_result[1])."',
+				'".mysql_real_escape_string($perso_query_result[2])."','".$perso_query_result[3]."',
 				'".$perso_query_result[4]."','".$perso_query_result[5]."',
 				'".$currentCourseID."')";
 		}

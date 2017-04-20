@@ -210,8 +210,11 @@ hContent;
         $newContent = autoquote($_POST['newContent']);
         if ($id) {
             $id = intval($_POST['id']);
-            db_query("UPDATE annonces SET contenu = $newContent,
-			title = $antitle, temps = NOW()
+            
+            $newContent = mysql_real_escape_string($newContent);
+            $antitle = mysql_real_escape_string($antitle);
+            db_query("UPDATE annonces SET contenu = '$newContent',
+			title = '$antitle', temps = NOW()
 			WHERE id = $id", $mysqlMainDb);
             $message = "<p class='success_small'>$langAnnModify</p>";
         }
@@ -224,8 +227,10 @@ hContent;
             list($orderMax) = mysql_fetch_row($result);
             $order = $orderMax + 1;
             // INSERT ANNOUNCEMENT
-            db_query("INSERT INTO annonces SET contenu = $newContent,
-			title = $antitle, temps = NOW(),
+            $newContent = mysql_real_escape_string($newContent);
+            $antitle = mysql_real_escape_string($antitle);
+            db_query("INSERT INTO annonces SET contenu = '$newContent',
+			title = '$antitle', temps = NOW(),
 			cours_id = $cours_id, ordre = $order");
         }
 

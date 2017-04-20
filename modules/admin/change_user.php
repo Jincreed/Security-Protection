@@ -39,10 +39,13 @@ $navigation[] = array("url" => "index.php", "name" => $langAdmin);
 $tool_content = '';
 
 if (isset($_POST['username'])) {
+    $username = $_POST['username'];
+    $username = mysql_real_escape_string($username);
+    
 	$result = db_query("SELECT user_id, nom, username, password, prenom, statut, email, iduser is_admin, perso, lang
                 FROM user LEFT JOIN admin
                 ON user.user_id = admin.iduser
-                WHERE username=" . autoquote($_POST['username']));
+                WHERE username=" . autoquote($username));
 	if (mysql_num_rows($result) > 0) {
                 $myrow = mysql_fetch_array($result);
                 $_SESSION['uid'] = $myrow["user_id"];
