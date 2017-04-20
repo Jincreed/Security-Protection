@@ -380,17 +380,22 @@ if (isset($_POST['create_course'])) {
         // ------------- update main Db------------
         mysql_select_db("$mysqlMainDb");
 
+        $intitule = mysql_real_escape_string($intitule);
+      	$description = mysql_real_escape_string($description);
+      	$course_addon = mysql_real_escape_string($course_addon);
+      	$course_keywords = mysql_real_escape_string($course_keywords);
+      	$code = mysql_real_escape_string($code);
         db_query("INSERT INTO cours SET
                         code = '$code',
                         languageCourse =" . quote($language) . ",
-                        intitule = " . mysql_real_escape_string($intitule) . ",
-                        description = " . mysql_real_escape_string($description) . ",
-                        course_addon = " . mysql_real_escape_string($course_addon) . ",
-                        course_keywords = " . mysql_real_escape_string($course_keywords) . ",
+                        intitule = " . quote($intitule) . ",
+                        description = " . quote($description) . ",
+                        course_addon = " . quote($course_addon) . ",
+                        course_keywords = " . quote($course_keywords) . ",
                         faculte = " . quote($facname) . ",
                         visible = " . quote($formvisible) . ",
                         titulaires = " . quote($titulaires) . ",
-                        fake_code = " . mysql_real_escape_string($code) . ",
+                        fake_code = " . quote($code) . ",
                         type = " . quote($type) . ",
                         faculteid = '$facid',
                         first_create = NOW()");
