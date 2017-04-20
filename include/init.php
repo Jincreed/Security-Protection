@@ -363,7 +363,8 @@ if(isset($currentCourse) && file_exists($module_ini_dir = getcwd() . "/module.in
 include_once "${webDir}csrf-magic/csrf-magic.php";
 
 $httpReferer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
-if($httpReferer!== null and substr($httpReferer,0,24) !== "localhost/openeclass-2.3" and
-substr($httpReferer,0,31) !== "http://localhost/openeclass-2.3"){
-	
+if($httpReferer!== null and substr($httpReferer,0,25) !== "localhost/openeclass-2.3/" and
+substr($httpReferer,0,32) !== "http://localhost/openeclass-2.3/"){
+  echo 'Authentication failed!';
+	exit(0);
 }
