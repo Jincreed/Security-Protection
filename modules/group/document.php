@@ -42,6 +42,14 @@ The user can : - navigate through files and directories.
 html content)
 */
 
+function sanitize_text($input_text) {
+ $sanitized_text = trim($input_text);
+ $sanitized_text = strip_tags($sanitized_text);
+ $sanitized_text = htmlspecialchars($sanitized_text);
+ return $sanitized_text;
+}
+
+
 $require_current_course = TRUE;
 $require_help = TRUE;
 $require_login = true;
@@ -225,7 +233,7 @@ if (isset($rename)) {
         <input type='hidden' name='userGroupId' value='$userGroupId' />
         <table class='FormData' width='99%'><tbody><tr>
         <th class='left' width='200'>$langRename:</th>
-        <td class='left'>$langRename ".htmlspecialchars($fileName)." $langIn: <input type='text' name='renameTo' value='$fileName' class='FormData_InputText' size='50' /></td>
+        <td class='left'>$langRename ".sanitize_text($fileName)." $langIn: <input type='text' name='renameTo' value='$fileName' class='FormData_InputText' size='50' /></td>
         <td class='left' width='1'><input type='submit' value='$langRename' /></td>
         </tr></tbody></table></form><br />";
 }
@@ -234,7 +242,9 @@ if (isset($rename)) {
 CREATE DIRECTORY
 *****************************************/
 if (isset($newDirPath) && isset($newDirName)) {
-        $newDirName = trim($newDirName);
+        $newDirName = sanitize_text($newDirName);
+        $newDirPath = sanitize_text($newDirPath);
+
         $r = db_query('SELECT * FROM group_documents WHERE filename = ' . quote($newDirName));
         $exists = false;
         $parent = preg_replace('|/[^/]*$|', '', $newDirPath);
@@ -261,6 +271,7 @@ STEP 1
 if (isset($createDir))
 {
 	//$dialogBox ="";
+  $createDir = sanitize_text($createDir);
 	$dialogBox .= "<form>\n" .
 	              "<input type='hidden' name='userGroupId' value='$userGroupId' />\n" .
 	              "<input type='hidden' name='newDirPath' value='$createDir' />\n" .
@@ -500,7 +511,7 @@ if (isset($fileNameList))
                         <img src=\"../../template/classic/img/delete.gif\" border=0></a></td>\n";
                 } else {
                         $tool_content .= "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>\n";
-                } 
+                }
 		$tool_content .= "\n    </tr>\n";
 	}
 }
