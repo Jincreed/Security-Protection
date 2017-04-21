@@ -503,4 +503,3 @@ if (count($dropbox_person->sentWork)==0) {
 $tool_content .= "</tbody></table>";
 add_units_navigation(TRUE);
 draw($tool_content, 2, 'dropbox', $head_content);
-

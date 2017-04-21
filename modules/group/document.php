@@ -143,6 +143,8 @@ UPLOAD FILE
 **************************************/
 if (is_uploaded_file(@$userFile) )
 {
+  $name = strtolower($_FILES['userFile']['name']);
+	$whitelist = array('zip', 'pdf', 'rar', 'tar', 'doc');
 	/* Check the file size doesn't exceed
 	* the maximum file size authorized in the directory
 	*/
@@ -155,6 +157,13 @@ if (is_uploaded_file(@$userFile) )
 		'inf|ins|isp|jse|lnk|mdb|mde|msc|msi|msp|mst|pcd|pif|reg|scr|sct|shs|' .
 		'shb|url|vbe|vbs|wsc|wsf|wsh)$/', $_FILES['userFile']['name'])) {
 			$dialogBox .= "$langUnwantedFiletype: {$_FILES['userFile']['name']}";
+	}elseif (!in_array(end((explode('.', $name))), $whitelist)) {
+		$dialogBox .= "<p class=\"caution_small\">$langUnwantedFiletype: {$_FILES['userFile']['name']}<br/>";
+		$whitelistString = $whitelist[0];
+		for($i = 1; $i < count($whitelist); $i++) {
+			$whitelistString .= ', ' . $whitelist[$i];
+		}
+		$dialogBox .= "<p class=\"caution_small\">$langWantedFiletype: $whitelistString<br/>";
 	} else {
 		$fileName = trim($_FILES['userFile']['name']);
 		/**** Check for no desired characters ***/

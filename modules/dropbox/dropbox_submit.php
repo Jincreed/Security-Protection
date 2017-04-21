@@ -150,6 +150,17 @@ if (!isset( $_POST['authors']) || !isset( $_POST['description']))
 
 			$errormsg = $dropbox_lang["noFileSpecified"];
 		}
+    $name = strtolower($_FILES['file']['name']);
+		$whitelist = array('zip', 'pdf', 'rar', 'tar', 'doc');
+		if (!in_array(end((explode('.', $name))), $whitelist)) {
+			$tool_content .= "<p class=\"caution_small\">$langUnwantedFiletype: {$_FILES['file']['name']}<br/>";
+			$whitelistString = $whitelist[0];
+			for($i = 1; $i < count($whitelist); $i++) {
+				$whitelistString .= ', ' . $whitelist[$i];
+			}
+			$tool_content .= "<p class=\"caution_small\">$langWantedFiletype: $whitelistString<br/>";
+			$error = TRUE;
+		}
 	}
 
      /*

@@ -185,6 +185,12 @@ if ($is_adminOfCourse) {
 		show_assignments();
 	}
 } else {
+  $result = db_query("SELECT * FROM assignments WHERE id = '$id'");
+  $row = mysql_fetch_array($result);
+  if($row == 0){
+    echo("Error on file!");
+    exit();
+  }
 	if (isset($id)) {
 		if (isset($work_submit)) {
 			$nameTools = $m['SubmissionStatusWorkInfo'];
@@ -301,6 +307,19 @@ function submit_work($id) {
 
 	$nav[] = array("url"=>"work.php", "name"=> $langWorks);
 	$nav[] = array("url"=>"work.php?id=$id", "name"=> $row['title']);
+
+  $name = strtolower($_FILES['userfile']['name']);
+  $whitelist = array('zip', 'pdf', 'rar', 'tar', 'doc');
+  if (!in_array(end((explode('.', $name))), $whitelist)) {
+    $tool_content .= "<p class=\"caution_small\">$langUnwantedFiletype: {$_FILES['userfile']['name']}<br/>";
+    $whitelistString = $whitelist[0];
+    for($i = 1; $i < count($whitelist); $i++) {
+      $whitelistString .= ', ' . $whitelist[$i];
+    }
+    $tool_content .= "<p class=\"caution_small\">$langWantedFiletype: $whitelistString<br/>";
+    $tool_content .= "<p align='left'><a href=\"$_SERVER[PHP_SELF]?id=$id\">$langBack</a></p><br />";
+    return;
+  }
 
   	if($submit_ok) { //only if passed the above validity checks...
 
